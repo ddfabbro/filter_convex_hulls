@@ -1,26 +1,5 @@
 // This code follows Google C++ Style Guide.
 
-// Eliminate overlapped convex hulls
-// - Load convex_hulls.json.
-// - Some of the convex hulls stored in convex_hulls.json are overlapped.
-// - Eliminate the overlapped convex hulls based on the following rule.
-//   - Eliminate if the convex hull has more than 50% its own area overlapped with
-//     other convex hulls.
-
-// - Generate result_convex_hulls.json which stores only the remaining (non-eliminated)
-//   convex hulls. The format should be the same as convex_hulls.json.
-// - Authorized program language is only C++.
-//   - Follow a coding style guide which you are using.
-//     - E.g. Google C++ Style Guide
-//   - Mention the style guide as a comment on the top of your program code.
-//     - // This code follows Google C++ Style Guide.
-// - You are allowed to use JSON library to read/write a json file.
-//   - E.g. https://nlohmann.github.io/json/.
-// - You are allowed to use the std library in C++.
-// - Do not use any other libraries, especially to calculate area or intersection.
-// - Put appropriate comments for the reviewer to understand your code easily.
-// - Submit both your code and your result_convex_hulls.json file.
-
 #include <iomanip>
 #include <fstream>
 
@@ -45,14 +24,14 @@ void FilterConvexHulls(std::vector<ConvexHull> convex_hulls,
     // for each convex hull, get one to calculate intersection
     for (auto convex_hull : convex_hulls) {
 
-      // do not calculate intersection of itslef
+      // do not calculate intersection of itself
       if (convex_hull_ref.GetID() != convex_hull.GetID()) {
 
         // calculate the intersection hull formed by two convex hulls
         ConvexHull intersection_hull;
         if (ConvexHullIntersection(convex_hull_ref,
-          convex_hull,
-          intersection_hull)) {
+                                   convex_hull,
+                                   intersection_hull)) {
 
           // calculate overlap ratio between reference 
           // convex hull and intersection hull
@@ -99,16 +78,20 @@ int main() {
     std::vector<json> apexes;
     for (const auto vertice : convex_hull.GetVertices()) {
 
-      apexes.push_back(json({ {
-          "x", vertice.x }, {
-          "y", vertice.y }
-        }));
+      apexes.push_back(
+        json({ 
+          { "x", vertice.x }, 
+          { "y", vertice.y }
+        })
+      );
     }
 
-    filtered_convex_hulls_json.push_back(json({ {
-        "ID", convex_hull.GetID() }, {
-        "apexes", apexes }
-      }));
+    filtered_convex_hulls_json.push_back(
+      json({ 
+        { "ID", convex_hull.GetID() }, 
+        { "apexes", apexes } 
+      })
+    );
   }
   
   // add filtered_convex_hulls_json to "result convex hulls" field
